@@ -1,0 +1,45 @@
+<!-- home.component.html -->
+
+<div class="container">
+    <div class="title-container">
+      <h1 class="animated-text">Bienvenue dans Festival App!</h1>
+      <p>Choisissez une catégorie pour commencer</p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-container">
+      <mat-card class="card" routerLink="/benevoles">
+        <mat-card-header>
+          <mat-card-title>Bénévoles</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Gestion des bénévoles</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card" routerLink="/affectations">
+        <mat-card-header>
+          <mat-card-title>Affectations</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Gestion des affectations</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card" routerLink="/jeux">
+        <mat-card-header>
+          <mat-card-title>Jeux</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Gestion des jeux</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card" routerLink="/zones">
+        <mat-card-header>
+          <mat-card-title>Zones</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Liste des zones</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

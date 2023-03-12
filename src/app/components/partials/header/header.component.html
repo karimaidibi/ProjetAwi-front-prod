@@ -1,0 +1,34 @@
+<!--nav bar-->
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
+  <a routerLink="/home" class="festivalLogo d-flex align-items-center text-decoration-none col-md-3 mb-2 mb-md-0 ps-5">
+    Festivals<em>APP</em>
+    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+  </a>
+  <!--item au milieu-->
+  <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+    <li >
+      <button mat-button routerLink="/jeux" class="px-2">Jeux</button>
+    </li>
+    <li >
+      <button mat-button routerLink="/benevoles" class="px-2">Bénévoles</button>
+    </li>
+    <li >
+      <button mat-button routerLink="/affectations" class="px-2">Affectations</button>
+    </li>
+    <li >
+      <button mat-button routerLink="/zones" class="px-2">Zones</button>
+    </li>
+  </ul>
+
+  <ul class="nav col-md-3 justify-content-end px-5">
+    <!--si user est n'est pas connecter-->
+    <li class="nav-item" *ngIf="!isAuth"><button mat-button class="px-2" data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample">Login</button></li>
+    <!--si user est connecté  -->
+    <li class="nav-item" *ngIf="isAuth" ><button mat-button class="px-2" (click)="logout()">Log out</button></li>
+    <!--sign in component-->
+    <app-signin></app-signin>
+  </ul>
+
+</header>
+
+

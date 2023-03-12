@@ -1,0 +1,81 @@
+.mat-row:hover{
+    background-color: #968c8c7a;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    border-color: currentColor;
+    font-weight: bold;
+  }
+
+  p {
+  font-family: Lato;
+  }
+
+  table {
+  width: 70%;
+  margin: 0 auto;
+  margin-top: 25px;
+  /* Pour éviter que le footer ne recouvre la dernière ligne */
+  padding-bottom: 5%;
+  }
+
+  /* it adds a margin between the two buttons */
+  .btn-edit {
+  text-align: right;
+  color: white;
+  }
+
+  h1{
+    text-align: center;
+  }
+
+  h2 {
+  text-align: center;
+  padding-top: 20px;
+  }
+
+  .table-header {
+  width: 70%;
+  margin: auto;
+  text-align: right;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  }
+
+  .mat-divider {
+    margin: 20px 15%;
+    width: 70%;
+  }
+  
+
+  .button-remove-rows {
+  margin-right: 5px;
+  }
+
+  ::ng-deep .mat-form-field-infix {
+  width: 100% important;
+  }
+
+  .form-input {
+  padding-right: 5px;
+  }
+
+  label {
+    padding: 0 8px;
+  }
+
+  .demo-inline-card {
+    width: 300px;
+    margin-bottom: 1rem;
+  }
+
+  .mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }

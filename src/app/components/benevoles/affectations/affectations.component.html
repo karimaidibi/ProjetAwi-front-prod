@@ -1,0 +1,212 @@
+
+<h1>  Gestion des affectations </h1>
+
+<mat-divider></mat-divider>
+
+<article class="table-header">
+  <div>
+    <i>Filtres : </i>
+  </div>
+  <!--Filters all-->
+  <div>
+    <mat-form-field class="mat-mdc-form-field">
+      <mat-label>Filtrer par Nom, prénom, Email</mat-label>
+      <input matInput (keyup)="applyFilterText($event)" placeholder="Ex. Berry" #input>
+    </mat-form-field>
+  </div>
+  <!--Filters by time -->
+  <div>
+    <mat-form-field>
+      <mat-label>Filtrer par creneau début </mat-label>
+      <mtx-datetimepicker #datetimePicker
+                          [type]="type"
+                          [mode]="mode"
+                          [multiYearSelector]="multiYearSelector"
+                          [startView]="startView"
+                          [twelvehour]="twelvehour"
+                          [timeInterval]="timeInterval"
+                          [touchUi]="touchUi"
+                          [timeInput]="timeInput"></mtx-datetimepicker>
+      <input [mtxDatetimepicker]="datetimePicker" [formControl]="datetimeFilterForm" matInput (dateChange)="onDateFilterChanged($event)" (keyup)="onDateFilterChanged($event)">
+      <mtx-datetimepicker-toggle [for]="datetimePicker" matSuffix></mtx-datetimepicker-toggle>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Filtrer par creneau fin </mat-label>
+        <mtx-datetimepicker #datetimePicker2
+                          [type]="type"
+                          [mode]="mode"
+                          [multiYearSelector]="multiYearSelector"
+                          [startView]="startView"
+                          [twelvehour]="twelvehour"
+                          [timeInterval]="timeInterval"
+                          [touchUi]="touchUi"
+                          [timeInput]="timeInput"></mtx-datetimepicker>
+      <input [mtxDatetimepicker]="datetimePicker2" [formControl]="datetimeFilterForm2" matInput (dateChange)="onDateFilterChanged($event)" (keyup)="onDateFilterChanged($event)">
+      <mtx-datetimepicker-toggle [for]="datetimePicker2" matSuffix></mtx-datetimepicker-toggle>
+    </mat-form-field>
+  </div>
+  <!-- Filtrer par zone -->
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Fitrer Par Zones</mat-label>
+      <mat-select [formControl]="zonesFilterForm" multiple (selectionChange)="onZonesFilterChanged()">
+        <mat-select-trigger>
+          {{zonesFilterForm.value?.[0] || ''}}
+          <span *ngIf="(zonesFilterForm.value?.length || 0) > 1" class="example-additional-selection">
+            (+{{(zonesFilterForm.value?.length || 0) - 1}} {{zonesFilterForm.value?.length === 2 ? 'other' : 'others'}})
+          </span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let zone of zones" [value]="zone.nom">{{zone.nom}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+<!--bouton si user n'est pas connecté-->
+  <div>
+    <button
+    class="button-remove-rows"
+    mat-raised-button color="primary"
+    *ngIf="!isAuth"
+    data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample"
+  >
+    Gérer les affectations
+    <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+<!--bouton si user est connecté-->
+  <div>
+    <button
+      class="button-remove-rows"
+      mat-raised-button color="warn"
+      (click)="removeSelectedRows()"
+      *ngIf="isAuth"
+    >
+      Supprimer les affectations sélectionnées
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</article>
+
+<table mat-table [dataSource]="benevolesDisplay">
+    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+      <!--- switch case on the col.key --->
+      <th mat-header-cell *matHeaderCellDef [ngSwitch]="col.key">
+        <!---If key of column is isSelected--->
+        <span *ngSwitchCase="'isSelected'">
+          <mat-checkbox
+            (change)="selectAll($event)"
+            [checked]="isAllSelected()"
+            [indeterminate]="!isAllSelected() && isAnySelected()"
+            *ngIf="isAuth"
+          >
+        </mat-checkbox>
+        </span>
+        <!-- Default case : the label of the column --->
+        <span *ngSwitchDefault>{{ col.label }}</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <!-- If the user is not editing -->
+        <!--- switch case on the col.type --->
+        <div [ngSwitch]="col.type" *ngIf="!element.isEdit">
+          <!---If type of column is isSelected--->
+          <ng-container *ngSwitchCase="'isSelected'">
+            <mat-checkbox
+              (change)="element.isSelected = $event.checked"
+              [checked]="element.isSelected"
+              *ngIf="isAuth"
+            >
+          </mat-checkbox>
+          </ng-container>
+          <!---If type of column is isEdit--->
+          <div class="btn-edit" *ngSwitchCase="'isEdit'">
+            <button mat-raised-button
+            color="accent"
+            (click)="handleClickOnEdit(element)"
+            *ngIf="isAuth"
+            class="me-3"
+            >
+              Edit
+              <mat-icon class ="ms-1">edit</mat-icon>
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="removeRow(element)"
+              *ngIf="isAuth"
+            >
+              Delete
+              <mat-icon class ="ms-1">delete</mat-icon>
+            </button>
+          </div>
+          <!---If type of column is date--->
+          <span *ngSwitchCase="'date'">
+            {{ element[col.key] | date: 'mediumDate' }}
+          </span>
+          <!---Default case -->
+          <span *ngSwitchDefault>
+            {{ element[col.key] }}
+          </span>
+        </div>
+        <!-- If the user is editing -->
+        <!--- switch case on the col.type --->
+        <div [ngSwitch]="col.type" *ngIf="element.isEdit">
+          <!---If type of column is isSelected--->
+          <div *ngSwitchCase="'isSelected'"></div>
+          <!---If type of column is isEdit--->
+          <div class="btn-edit" *ngSwitchCase="'isEdit'">
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="editRow(element)"
+              [disabled]="disableSubmit(element.rowId)"
+              class="me-3"
+            >
+              Done
+            </button>
+            <button
+            mat-raised-button
+            color="warn"
+            (click)="cancelEdit(element)"
+          >
+            Cancel
+          </button>
+          </div>
+          <!---If type of column is selectZone--->
+          <mat-form-field *ngSwitchCase="'selectZone'" appearance="fill" >
+            <mat-label>Select Zone</mat-label>
+            <mat-select [(ngModel)]="element.idZone" [required]="col.required" #ngModel="ngModel" (ngModelChange)="inputHandler($event, element.rowId, col.key, ngModel)">
+              <mat-option *ngFor="let zone of zones" [value]="zone._id">{{zone.nom}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+            <!---If type of column is email--->
+            <span *ngSwitchCase="'email'">
+                {{ element[col.key] }}
+              </span>
+          <!---If type of column is text--->
+          <span *ngSwitchCase="'text'">
+            {{ element[col.key] }}
+          </span>
+          <!--Default case : other column types -->
+          <mat-form-field class="form-input" *ngSwitchDefault>
+            <input
+              matInput
+              [required]="col.required"
+              [pattern]="col.pattern"
+              [type]="col.type"
+              [(ngModel)]="element[col.key]"
+              #ngModel="ngModel"
+              (ngModelChange)="inputHandler($event, element.rowId, col.key, ngModel)"
+            />
+          </mat-form-field>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
+</table>
